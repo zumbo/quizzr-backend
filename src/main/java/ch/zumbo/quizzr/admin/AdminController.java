@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.NoSuchElementException;
 
 @RestController
+@RequestMapping("admin")
 public class AdminController {
     @Autowired
     private QuestionRepository questionRepository;
@@ -26,6 +27,11 @@ public class AdminController {
     public Question updateQuestion(long id, @RequestBody Question question) {
         question.setId(id);
         return questionRepository.save(question);
+    }
+
+    @DeleteMapping("/questions/{id}")
+    public void deleteQuestion(long id) {
+        questionRepository.deleteById(id);
     }
 
 
