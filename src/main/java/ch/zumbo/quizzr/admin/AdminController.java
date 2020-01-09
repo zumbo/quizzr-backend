@@ -5,38 +5,45 @@ import ch.zumbo.quizzr.data.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("admin")
+@CrossOrigin
 public class AdminController {
     @Autowired
     private QuestionRepository questionRepository;
 
     @GetMapping("/questions/{id}")
-    public Question getQuestion(long id) {
-        return questionRepository.findById(id).orElseThrow(NoSuchElementException::new);
+    public AdminQuestion getQuestion(@PathVariable long id) {
+        Question question = questionRepository.findById(id).orElseThrow(NoSuchElementException::new);
+        return new AdminQuestion(question);
     }
 
     @GetMapping("/questions")
-    public List<Question> getAllQuestions() {
-        return questionRepository.findAll();
+    public List<AdminQuestion> getAllQuestions() {
+        List<Question> questions = questionRepository.findAll();
+        List<AdminQuestion> adminQuestions = new ArrayList<>();
+        for (Question question : questions) {
+            adminQuestions.add(new AdminQuestion(question));
+        }
+        return adminQuestions;
     }
 
     @PostMapping("/questions")
-    public Question insertQuestion(@RequestBody Question question) {
-        return questionRepository.save(question);
+    public AdminQuestion insertQuestion(@RequestBody AdminQuestion question) {
+        return new AdminQuestion(questionRepository.save(question.asQuestion()));
     }
 
     @PutMapping("/questions/{id}")
-    public Question updateQuestion(long id, @RequestBody Question question) {
-        question.setId(id);
-        return questionRepository.save(question);
+    public AdminQuestion updateQuestion(@PathVariable long id, @RequestBody AdminQuestion question) {
+        return new AdminQuestion(questionRepository.save(question.asQuestion()));
     }
 
     @DeleteMapping("/questions/{id}")
-    public void deleteQuestion(long id) {
+    public void deleteQuestion(@PathVariable long id) {
         questionRepository.deleteById(id);
     }
 
