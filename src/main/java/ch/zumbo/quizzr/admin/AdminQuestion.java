@@ -12,6 +12,10 @@ class AdminQuestion {
     private String answer;
     private List<String> wrongAnswers;
 
+    AdminQuestion() {
+        // Wird von Jackson-Deserialisierung benötigt.
+    }
+
     AdminQuestion(Question question) {
         this.id = question.getId();
         this.text = question.getText();
