@@ -7,6 +7,7 @@ import java.util.List;
 @Entity
 public class Question {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column
     private String text;
